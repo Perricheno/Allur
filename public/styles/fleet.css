@@ -1,0 +1,119 @@
+/* ===== Парк, станции Казахстана на карте ===== */
+.net-bar { display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: center; padding: 10px 14px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface-2); position: relative; }
+.net-title { display: inline-flex; gap: 6px; align-items: center; color: var(--text-2); }
+.net-chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border: 1px solid var(--line-strong); border-radius: 999px; background: var(--surface); font-weight: 550; font-size: var(--text-sm); }
+.net-chip b { color: var(--text-3); font-weight: 600; }
+.net-chip.on { background: var(--accent-bg); border-color: var(--accent); color: var(--accent-ink); }
+.net-chip:disabled { opacity: .5; cursor: progress; }
+.net-search { display: flex; align-items: center; gap: 8px; padding: 0 10px; min-height: 34px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--surface); flex: 1 1 260px; max-width: 380px; }
+.net-search input { border: 0; outline: 0; background: none; flex: 1; min-width: 0; }
+.net-results { position: absolute; z-index: 800; top: calc(100% + 4px); right: 14px; width: min(380px, calc(100% - 28px)); max-height: 280px; overflow: auto; list-style: none; margin: 0; padding: 4px; background: var(--surface); border: 1px solid var(--line-strong); border-radius: var(--radius); box-shadow: var(--shadow-2); }
+.net-results button { width: 100%; display: grid; text-align: left; gap: 1px; padding: 8px 10px; border: 0; background: none; border-radius: var(--radius-s); }
+.net-results button:hover { background: var(--accent-bg); }
+.net-error { color: var(--danger); font-size: var(--text-sm); }
+.geo-net-popup { display: grid; gap: 4px; min-width: 190px; font: 400 13px/1.4 var(--font); }
+.geo-net-popup strong { font-size: 14px; }
+.geo-net-popup small { color: var(--text-3); }
+.geo-net-label { background: rgb(255 255 255 / 88%); border: 0; box-shadow: none; padding: 1px 5px; font: 600 11px/1.3 var(--font); color: #123d54; }
+.geo-net-label::before { display: none; }
+.geo-net-tip { font: 500 12px/1.3 var(--font); }
+.geo-depot { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 8px; color: #fff; font: 700 13px/1 var(--font); border: 2px solid #fff; box-shadow: 0 1px 6px rgb(0 0 0 / 35%); }
+.geo-depot.diesel { background: #7a4a11; }
+.geo-depot.electric { background: #6b5bd2; }
+.fleet-summary { display: grid; gap: 8px; }
+.fleet-summary h3 { display: flex; gap: 8px; align-items: center; }
+.fleet-total strong { font-size: var(--text-lg); letter-spacing: -0.02em; }
+.fleet-bars { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.fleet-bars li { display: grid; grid-template-columns: minmax(170px, 1.1fr) 2fr auto; gap: 10px; align-items: center; }
+.fb-name { display: inline-flex; align-items: center; gap: 6px; }
+.fb-bar { height: 12px; border-radius: 6px; background: #e1e9ee; overflow: hidden; }
+.fb-bar i { display: block; height: 100%; background: var(--accent); border-radius: 6px; }
+.fleet-bars li:nth-child(2) .fb-bar i { background: #7a4a11; }
+.fleet-bars li:nth-child(3) .fb-bar i { background: #8798a4; }
+.fleet-corridor { color: var(--text-2); font-size: var(--text-sm); }
+.fleet-summary.compact .fleet-bars li { grid-template-columns: 1fr 1fr auto; }
+.fleet-series { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.fleet-series ul, .deliveries, .series-now, .sources { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 8px; }
+.fleet-series li { display: grid; gap: 1px; }
+.fleet-series span { color: var(--text-2); font-size: var(--text-sm); }
+.fleet-series h3 { display: flex; gap: 6px; align-items: center; }
+.deliveries li { display: grid; gap: 2px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+.deliveries strong { font-size: var(--text-lg); }
+.series-now li { display: flex; justify-content: space-between; gap: 8px; }
+.station-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 4px 20px; max-height: 420px; overflow: auto; }
+.station-list li { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 6px 4px; border-bottom: 1px solid var(--line); }
+.station-list li > span { display: grid; }
+@media (max-width: 760px) { .fleet-bars li { grid-template-columns: 1fr auto; } .fleet-bars .fb-bar { grid-column: 1 / -1; order: 3; } }
+
+/* ===== Сеть КТЖ на главной ===== */
+.net-kpis { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+.net-panel { padding-bottom: 16px; }
+.net-toolbar { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
+.net-time { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-left: auto; }
+.net-count { color: var(--text-2); font-size: var(--text-sm); }
+.net-clock { display: grid; text-align: right; }
+.net-clock strong { font-size: var(--text-lg); }
+.net-clock small { color: var(--text-3); }
+.net-layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16px; align-items: stretch; }
+.net-map-wrap { position: relative; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; min-height: max(600px, 72vh); }
+.net-map { position: absolute; inset: 0; background: #eef3f6; }
+.net-aside { display: grid; gap: 14px; align-content: start; max-height: max(600px, 72vh); overflow: auto; padding-right: 2px; }
+.net-train { display: grid; gap: 10px; padding: 12px; border: 1px solid var(--accent-line); border-radius: var(--radius); background: var(--accent-bg); }
+.net-hint { display: flex; gap: 10px; align-items: flex-start; color: var(--text-2); padding: 10px 12px; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius); font-size: var(--text-sm); }
+.net-list ul { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 2px; }
+.net-list button { width: 100%; display: grid; grid-template-columns: 52px 1fr auto; gap: 8px; align-items: center; padding: 7px 8px; border: 0; border-radius: var(--radius-s); background: none; text-align: left; font-size: var(--text-sm); }
+.net-list button:hover { background: var(--surface-2); }
+.net-list h3 { display: flex; gap: 8px; align-items: center; }
+@media (max-width: 1100px) { .net-layout { grid-template-columns: minmax(0, 1fr); } .net-map-wrap { min-height: 460px; } .net-aside { max-height: none; } .net-time { margin-left: 0; } }
+
+.net-train-canvas { position: absolute; inset: 0; z-index: 620; pointer-events: none; }
+.net-tip { position: absolute; z-index: 700; pointer-events: none; display: grid; gap: 2px; width: 252px; padding: 10px 12px; background: var(--nav-bg); color: #e7f0f5; border-radius: var(--radius); box-shadow: var(--shadow-2); font-size: var(--text-sm); }
+.net-tip strong { color: #fff; }
+.net-tip small { color: #9db8c7; }
+.net-tip .bad { color: #ffb4ab !important; }
+
+.net-chip-top { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 999px; color: var(--text); text-decoration: none; font-size: var(--text-sm); white-space: nowrap; }
+.net-chip-top:hover { border-color: var(--accent); }
+@media (max-width: 900px) { .net-chip-top { display: none; } }
+.filter-row { display: flex; flex-wrap: wrap; gap: 10px 12px; align-items: center; margin: 10px 0; }
+.filter-select select { min-width: 170px; }
+.mini-kpis { display: flex; flex-wrap: wrap; gap: 6px 18px; padding: 8px 0 12px; color: var(--text-3); font-size: var(--text-sm); }
+.mini-kpis strong { color: var(--text); font-variant-numeric: tabular-nums; }
+.table-foot { display: flex; align-items: center; gap: 12px; padding-top: 10px; }
+.pad { padding: 16px 0; }
+.model-card { display: grid; gap: 10px; padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.model-card header { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
+.model-card h3 { margin: 0; font-size: var(--text-md, 1rem); }
+.model-list { display: grid; gap: 12px; margin-top: 12px; }
+.opt-table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
+.opt-table th, .opt-table td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+.opt-table tr.pick { background: var(--accent-bg); }
+.opt-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.cost-bar { display: block; height: 6px; border-radius: 3px; background: var(--accent); min-width: 2px; }
+.model-why { margin: 0; display: flex; gap: 8px; align-items: flex-start; color: var(--text-2, var(--text)); }
+.filter-row > *, .toolbar > * { max-width: 100%; min-width: 0; }
+.filter-row .segmented { overflow-x: auto; }
+.tabs { overflow-x: auto; max-width: 100%; }
+@media (max-width: 700px) { .filter-select, .filter-select select { width: 100%; } .toolbar .search { width: 100%; } }
+.panel, .tab-panel { min-width: 0; }
+.toolbar { max-width: 100%; }
+@media (max-width: 700px) { .search, .search input { min-width: 0; width: 100%; } .segmented { max-width: 100%; } }
+.tab-panel { grid-template-columns: minmax(0, 1fr); }
+.net-time[hidden] { display: none; }
+.specs { display: grid; gap: 14px; margin: 12px 0; }
+.specs h4 { margin: 0 0 6px; font-size: var(--text-sm); color: var(--text-3); text-transform: uppercase; letter-spacing: .04em; }
+.hour-chart { width: 100%; height: auto; max-height: 240px; }
+.hour-chart .grid { stroke: var(--line); stroke-width: 1; }
+.hour-chart .axis { fill: var(--text-3); font-size: 11px; }
+.hour-chart .b-work { fill: #9db3c1; }
+.hour-chart .b-problem { fill: var(--danger, #bf2520); }
+.legend { display: flex; gap: 14px; font-size: var(--text-sm); color: var(--text-3); }
+.sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; }
+.sw-work { background: #9db3c1; } .sw-problem { background: var(--danger, #bf2520); }
+.cost-bar.bar-danger { background: var(--danger, #bf2520); }
+.hist-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-top: 14px; }
+.hist h3 { margin: 0 0 8px; font-size: var(--text-sm); }
+.hist-row { display: grid; grid-template-columns: 96px 1fr 52px; gap: 8px; align-items: center; padding: 3px 0; font-size: var(--text-sm); }
+.hist-bar { display: block; background: #eef3f6; border-radius: 3px; }
+.plain-list { margin: 0; padding-left: 18px; display: grid; gap: 8px; }
+.kpis-tight { margin-bottom: 8px; }

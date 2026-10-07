@@ -1,0 +1,9 @@
+.developer-kpis { grid-template-columns: repeat(4,minmax(0,1fr)); }
+.developer-charts { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px; margin: 20px 0; }
+.developer-charts > * { min-width: 0; }
+.developer-chart { padding: 20px; }
+.developer-chart svg { display: block; width: 100%; margin-top: 12px; }
+.developer-list { list-style: none; margin: 0; padding: 0 20px 20px; }
+.developer-list li { display: flex; justify-content: space-between; gap: 14px; padding: 10px 0; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
+.developer-note { padding: 0 20px 20px; color: var(--text-3); }
+@media(max-width:900px) { .developer-kpis { grid-template-columns: repeat(2,minmax(0,1fr)); } .developer-charts { grid-template-columns: 1fr; } }

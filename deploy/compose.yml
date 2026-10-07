@@ -1,0 +1,50 @@
+# Деплой ktz.perricheno.com. Код проекта не затрагивается: репозиторий монтируется как есть,
+# обновления приходят через git pull (sync), сервер перезапускается сам (node --watch).
+name: ktz
+services:
+  app:
+    image: node:22-alpine
+    working_dir: /repo
+    # Перезапуск только после того, как sync полностью обновил файлы (метка в .git/deploy):
+    # так сервер не стартует на наполовину обновлённом коде.
+    command:
+      - sh
+      - -c
+      - |
+        until [ -d /repo/.git/deploy ]; do sleep 1; done
+        exec node --watch-path=/repo/.git/deploy server/index.js
+    environment:
+      HOST: 0.0.0.0
+      PORT: "3000"
+      KTZ_STATE: /data/state.json
+    ports:
+      - "127.0.0.1:${KTZ_PORT:-8190}:3000"
+    volumes:
+      - ..:/repo:ro
+      - ${KTZ_DATA:-../data}:/data
+    depends_on: [sync]
+    restart: unless-stopped
+
+  sync:
+    image: alpine/git:latest
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        git config --global --add safe.directory /repo
+        mkdir -p /repo/.git/deploy
+        # read-only helper: файл с токеном смонтирован ro, store-helper пытался в него писать
+        git config --global credential.helper '!f() { [ "$$1" = get ] && sed -n "s#^https://\\([^:]*\\):\\([^@]*\\)@github.com.*#username=\\1\\npassword=\\2#p" /run/git-credentials | head -2; }; f'
+        while true; do
+          before=$$(git -C /repo rev-parse HEAD)
+          if git -C /repo pull --ff-only -q; then
+            after=$$(git -C /repo rev-parse HEAD)
+            if [ "$$before" != "$$after" ]; then date -Iseconds > /repo/.git/deploy/stamp; echo "$$(date -Iseconds) деплой: $$before -> $$after"; fi
+          else
+            echo "$$(date -Iseconds) pull failed (локальные изменения/расхождение?)"
+          fi
+          sleep "$${SYNC_INTERVAL:-15}"
+        done
+    volumes:
+      - ..:/repo
+      - ${GIT_CREDENTIALS:-/root/.git-credentials}:/run/git-credentials:ro
+    restart: unless-stopped
