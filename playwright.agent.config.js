@@ -1,0 +1,2 @@
+import { defineConfig } from '@playwright/test';
+export default defineConfig({testDir:'./e2e/agent',outputDir:'./test-results/agent',workers:1,timeout:90000,expect:{timeout:20000},use:{baseURL:'http://127.0.0.1:3286',viewport:{width:1600,height:1100},launchOptions:{args:['--enable-unsafe-swiftshader']},screenshot:'only-on-failure'},webServer:{command:'node test/fixtures/dtai-server.js',url:'http://127.0.0.1:3286/healthz',reuseExistingServer:false}});

@@ -1,5 +1,9 @@
 // Иконки Lucide (ISC), https://lucide.dev, в формате IconNode — для морфинга через morphicons.
 export const icons = {
+  "user": [["circle",{"cx":"12","cy":"8","r":"4"}],["path",{"d":"M5 21v-2a7 7 0 0 1 14 0v2"}]],
+  "settings": [["path",{"d":"m9 3-1 3-3 1v3l-2 2 2 2v3l3 1 1 3h6l1-3 3-1v-3l2-2-2-2V7l-3-1-1-3Z"}],["circle",{"cx":"12","cy":"12","r":"3"}]],
+  "scan": [["path",{"d":"M8 3H5a2 2 0 0 0-2 2v3m13-5h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3m8 0h3a2 2 0 0 0 2-2v-3"}],["path",{"d":"M8 12h8m-4-4v8"}]],
+  "arrow-up-right": [["path",{"d":"M7 17 17 7M7 7h10v10"}]],
   "cpu": [["rect",{"width":"16","height":"16","x":"4","y":"4","rx":"2"}],["rect",{"width":"6","height":"6","x":"9","y":"9","rx":"1"}],["path",{"d":"M15 2v2"}],["path",{"d":"M15 20v2"}],["path",{"d":"M2 15h2"}],["path",{"d":"M2 9h2"}],["path",{"d":"M20 15h2"}],["path",{"d":"M20 9h2"}],["path",{"d":"M9 2v2"}],["path",{"d":"M9 20v2"}]],
   "database": [["ellipse",{"cx":"12","cy":"5","rx":"9","ry":"3"}],["path",{"d":"M3 5V19A9 3 0 0 0 21 19V5"}],["path",{"d":"M3 12A9 3 0 0 0 21 12"}]],
   "workflow": [["rect",{"width":"8","height":"8","x":"3","y":"3","rx":"2"}],["path",{"d":"M7 11v4a2 2 0 0 0 2 2h4"}],["rect",{"width":"8","height":"8","x":"13","y":"13","rx":"2"}]],

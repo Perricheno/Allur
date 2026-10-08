@@ -1,12 +1,19 @@
 {
   "id": "/",
-  "name": "КТЖ — Диспетчерская",
-  "short_name": "КТЖ",
+  "name": "Allur — Цифровой завод",
+  "short_name": "Allur",
   "lang": "ru",
-  "start_url": "/#/overview",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#f3f6fa",
-  "theme_color": "#0b2a3c",
-  "icons": [{ "src": "/assets/ktz-emblem.png", "sizes": "256x256", "type": "image/png", "purpose": "any" }]
+  "background_color": "#f6f5f2",
+  "theme_color": "#ff3426",
+  "icons": [
+    {
+      "src": "/assets/allur-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
 }

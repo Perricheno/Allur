@@ -1,0 +1,251 @@
+{
+  "version": 1,
+  "owner": "Allur production simulation",
+  "baseUrl": "same origin; port 3280",
+  "time": {
+    "unit": "model seconds",
+    "start": "2026-10-02T08:00:00+05:00",
+    "timezone": "Asia/Almaty",
+    "speed": "Fixed 1 model second per wall-clock second in the running service",
+    "independentOfVisualAnimation": true,
+    "defaultSpeed": 1,
+    "display": "Asia/Almaty wall clock. Model automatically resumes at speed 1 after restart; production HTTP API rejects pause, speed and step."
+  },
+  "sources": {
+    "simulation": "Live model, not plant telemetry",
+    "provided_case_pdf": "Unmodified historical case records",
+    "simulated_prediction": "Scenario result, not trained ML"
+  },
+  "areas": [
+    "supply",
+    "welding",
+    "paint",
+    "assembly",
+    "quality",
+    "finished"
+  ],
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/api/state",
+      "returns": "Full snapshot: clock, areas, units, inventory, rework, finishedStock, totals, kpis, conservation, risks, incidents, events, history, configuration, planning, serverTime (UTC wall clock), persistence (lastSavedAt, savedRevision, errors)"
+    },
+    {
+      "method": "GET",
+      "path": "/api/model",
+      "returns": "Factor catalog with bounds/default/current/source/apply, caseData, scenarios, defaults, demos"
+    },
+    {
+      "method": "GET",
+      "path": "/api/contract",
+      "returns": "This contract"
+    },
+    {
+      "method": "GET",
+      "path": "/api/audit",
+      "returns": "Last 200 model commands"
+    },
+    {
+      "method": "GET",
+      "path": "/api/events",
+      "returns": "SSE, event name state, data is full snapshot, every second. Closing browser does not pause server."
+    },
+    {
+      "method": "POST",
+      "path": "/api/actions",
+      "returns": "Updated full snapshot; errors {error} with 400",
+      "contentType": "application/json"
+    },
+    {
+      "method": "POST",
+      "path": "/api/scenarios/compare",
+      "bodyExample": {
+        "variants": [
+          "paint-failure",
+          "maintenance"
+        ],
+        "horizonSeconds": 28800,
+        "seeds": [
+          4817,
+          4818,
+          4819
+        ]
+      },
+      "returns": "202 {id,status,url,basedOnRevision}; poll url for status completed/failed. Only one worker at a time: 429 if busy."
+    },
+    {
+      "method": "GET",
+      "path": "/api/scenarios/jobs/:id",
+      "returns": "{status,result? ,error?}. result.results includes baseline and variants; metrics are increments over the forecast horizon; delta is paired against baseline by seed."
+    },
+    {
+      "method": "GET",
+      "path": "/api/analysis",
+      "returns": "Rule-based recommendations, inventory coverage, losses and shift plan; basedOnRevision identifies snapshot."
+    },
+    {
+      "method": "GET",
+      "path": "/api/case/files/:id",
+      "returns": "Original PDF, id brief or data"
+    },
+    {
+      "method": "GET",
+      "path": "/api/scenarios/jobs",
+      "returns": "Last 8 saved scenario jobs, newest first; results available via jobs/:id. Includes options/status/createdAt and archive error."
+    },
+    {
+      "method": "GET",
+      "path": "/api/agent/status",
+      "returns": "Availability, model, busy, archive error"
+    },
+    {
+      "method": "POST",
+      "path": "/api/agent/chat",
+      "returns": "{message,previousId?} ->202 {id,url}. Generates and executes isolated scenario or returns a clarification."
+    },
+    {
+      "method": "GET",
+      "path": "/api/agent/jobs",
+      "returns": "Last eight jobs, latest first"
+    },
+    {
+      "method": "GET",
+      "path": "/api/agent/jobs/:id?from=0",
+      "returns": "Job with new frames starting from index, execution plan, result and answer"
+    },
+    {
+      "method": "POST",
+      "path": "/api/agent/jobs/:id/cancel",
+      "returns": "Aborts active provider request and worker; keeps partial results"
+    }
+  ],
+  "commands": [
+    {
+      "type": "configure",
+      "factors": {
+        "lines.assembly.staffAvailable": 24,
+        "utilities.powerLimitKw": 800
+      }
+    },
+    {
+      "type": "failure",
+      "area": "paint",
+      "equipment": "Камера-02",
+      "minutes": 40
+    },
+    {
+      "type": "maintenance",
+      "area": "paint",
+      "minutes": 20
+    },
+    {
+      "type": "deliver",
+      "materials": {
+        "onix": 20,
+        "engines": 20,
+        "wheels": 80,
+        "batteries": 20,
+        "paintLiters": 120
+      }
+    },
+    {
+      "type": "replenish_spares",
+      "count": 5
+    },
+    {
+      "type": "schedule",
+      "at": 3600,
+      "command": {
+        "type": "failure",
+        "area": "assembly",
+        "minutes": 30
+      },
+      "note": "Absolute model elapsed seconds; must be in future and within one day"
+    },
+    {
+      "type": "reset",
+      "seed": 4817,
+      "factors": {
+        "inventory.onix": 80,
+        "initialWip.paint": 4
+      },
+      "note": "Replaces run with defaults plus supplied factor overrides; automatically runs in real time"
+    },
+    {
+      "type": "acknowledge",
+      "incidentId": "incident-1",
+      "note": "Принято в работу",
+      "description": "Records acknowledgment only; repair still follows model time."
+    },
+    {
+      "type": "demo",
+      "id": "cascade",
+      "description": "Replaces live run, warms up fixed seed 4817 and continues in real time. IDs cascade, materials, quality."
+    }
+  ],
+  "statuses": [
+    "idle",
+    "working",
+    "blocked",
+    "starved",
+    "material_shortage",
+    "down",
+    "changeover",
+    "no_staff",
+    "no_utilities",
+    "break",
+    "off_shift"
+  ],
+  "rendering": {
+    "area": "Match areas[].id to 3D workshop IDs",
+    "progress": "areas[].job.progress is 0..1; freeze machinery unless status=working",
+    "queues": "areas[].queue.count/capacity and unitIds",
+    "vehicle": "units[] includes queued, processing, rework and finished vehicles; units may leave snapshot when shipped/scrapped",
+    "equipment": "areas[].equipmentIds; incidents[].equipment identifies stopped asset",
+    "operationText": "Use status/reason and event messages; 12-second visual loops are not production cycle duration"
+  },
+  "metrics": {
+    "ratios": "0..1, null means denominator unavailable; format as percent only at UI",
+    "oee": "Per area only. Availability = workingSeconds/plannedSeconds; performance = completed idealSeconds/workingSeconds; quality = firstPassGood/completed. Do not average area OEE into factoryOee (null).",
+    "initialWip": "Excluded from average full lead time, included in mass balance",
+    "quality": "Per-stage defect events differ from totals.defectiveUnits (unique affected vehicles). firstPassYield is first-pass finished divided by finished plus scrapped units.",
+    "cost": "Illustrative energy + labor + rework + scrap only. Not full vehicle cost or profit.",
+    "history": "Five-minute cumulative samples, at most 2016 records",
+    "unitBalance": "initialWip + started = active + finishedStock + shipped + scrapped",
+    "forecastDowntime": "Sum of incremental downtime minutes across all modeled posts, not wall-clock factory downtime."
+  },
+  "limits": {
+    "comparisonHorizonSeconds": [
+      60,
+      57600
+    ],
+    "comparisonSeeds": [
+      1,
+      5
+    ],
+    "comparisonVariants": [
+      1,
+      6
+    ],
+    "bodyBytes": 65536,
+    "sseClients": 50
+  },
+  "persistence": "Model checkpoint every 10 seconds and after commands, plus last 8 scenario jobs/results saved atomically to independent Allur Docker volume. Finished forecasts survive restart; interrupted jobs are marked failed with an explanation.",
+  "frontendClient": "/js/allur-model-client.js",
+  "interfaces": {
+    "factory": "/?mode=live",
+    "management": "/control.html",
+    "agent": "/ai.html",
+    "scenarioWindow": "/lab.html?run=:id"
+  },
+  "agent": {
+    "model": "gpt-5.6-luna",
+    "provider": "OpenAI Responses API, store:false; server-side Docker secret",
+    "execution": "Strict function tool translated to bounded factory commands; isolated copies, no shell or arbitrary JavaScript execution",
+    "timeline": "101 calculated forecast snapshots, UI playback is independent of live server time",
+    "comparison": "Three seeds, baseline and scenario; charts show scenario medians minus baseline medians",
+    "archive": "Last 8 jobs including scenario, frames, result, explanation; atomic save to state.json.agent.json",
+    "limits": "One active request, six requests per minute, 4000 characters, horizon 1–16 h",
+    "areaDetails": "Workers and sensors come from the scenario configuration/state, never personal data or actual telemetry"
+  }
+}

@@ -1,14 +1,19 @@
 {
-  "name": "ktz-autodispatch-demo",
+  "name": "allur-digital-factory",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node --watch server/index.js",
-    "start": "node server/index.js",
-    "test": "node --test test/*.test.js",
+    "dev": "node --watch server/factory-server.js",
+    "start": "node server/factory-server.js",
+    "test": "node --test test/*.test.js test/allur/*.test.js",
+    "test:production": "node --test test/allur/*.test.js",
     "test:e2e": "playwright test",
-    "check": "node --check server/index.js && node --check server/model.js && node --check server/dispatch.js && for f in public/js/*.js; do node --check $f || exit 1; done"
+    "check": "node --check server/index.js && node --check server/model.js && node --check server/dispatch.js && for f in public/js/*.js; do node --check $f || exit 1; done",
+    "start:ktz": "node server/index.js",
+    "test:factory": "playwright test --config playwright.factory.config.js",
+    "test:control": "playwright test --config playwright.control.config.js",
+    "test:agent": "playwright test --config playwright.agent.config.js"
   },
   "engines": {
     "node": ">=22"
@@ -17,6 +22,7 @@
     "@playwright/test": "^1.63.0"
   },
   "dependencies": {
+    "three": "0.186.1",
     "web-push": "^3.6.7"
   }
 }

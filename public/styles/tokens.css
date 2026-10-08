@@ -1,4 +1,4 @@
-/* Токены дизайн-системы. Один шрифт (Inter), одна акцентная гамма (голубой КТЖ), один цвет опасности. */
+/* Токены дизайн-системы. Один шрифт (Inter), одна акцентная гамма (красный Allur), один цвет опасности. */
 @font-face {
   font-family: "Inter";
   font-style: normal;
@@ -27,28 +27,28 @@
   --text-xl: 2rem;
 
   /* Нейтральные */
-  --bg: #f3f6f9;
+  --bg: #f6f5f2;
   --surface: #ffffff;
-  --surface-2: #f8fafb;
-  --line: #dfe7ee;
-  --line-strong: #c9d3da;
-  --text: #152e40;
-  --text-2: #425564;
-  --text-3: #586e7c;
+  --surface-2: #faf9f7;
+  --line: #e8e5e1;
+  --line-strong: #d4d0ca;
+  --text: #252727;
+  --text-2: #535957;
+  --text-3: #777c78;
 
-  /* Акцент КТЖ */
-  --brand: #00a9d8;
-  --accent: #007aa5;
-  --accent-hover: #006a90;
-  --accent-ink: #00566f;
-  --accent-bg: #e5f4f9;
-  --accent-line: #a8d8e8;
+  /* Акцент Allur */
+  --brand: #ff3426;
+  --accent: #e63025;
+  --accent-hover: #ce271d;
+  --accent-ink: #ad261e;
+  --accent-bg: #fff0ed;
+  --accent-line: #f7c4bd;
   --gold: #ae8c00;
 
   /* Навигация */
-  --nav-bg: #0b2a3c;
-  --nav-text: #c3d4de;
-  --nav-active: #123d54;
+  --nav-bg: #292b2a;
+  --nav-text: #dddeda;
+  --nav-active: #49302e;
 
   /* Опасность — единственный «тревожный» цвет */
   --danger: #b42318;
@@ -61,7 +61,7 @@
   --radius-l: 12px;
   --shadow-1: 0 1px 2px rgb(11 42 60 / 6%), 0 1px 1px rgb(11 42 60 / 4%);
   --shadow-2: 0 8px 28px rgb(11 42 60 / 14%);
-  --focus: 0 0 0 3px rgb(0 169 216 / 45%);
+  --focus: 0 0 0 3px rgb(255 52 38 / 30%);
 
   /* Сетка */
   --nav-w: 220px;

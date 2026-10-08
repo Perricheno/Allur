@@ -1,0 +1,25 @@
+name: allur
+services:
+  factory:
+    image: node:22-alpine
+    working_dir: /app
+    command: node server/factory-server.js
+    environment:
+      HOST: 0.0.0.0
+      PORT: 3280
+      ALLUR_STATE_PATH: /var/lib/allur/state.json
+      OPENAI_MODEL: gpt-5.6-luna
+      OPENAI_API_KEY_FILE: /run/secrets/openai_api_key
+    secrets:
+      - openai_api_key
+    volumes:
+      - ..:/app:ro
+      - model-data:/var/lib/allur
+    ports:
+      - 127.0.0.1:3280:3280
+    restart: unless-stopped
+volumes:
+  model-data:
+secrets:
+  openai_api_key:
+    file: /root/.config/allur/openai-api-key
